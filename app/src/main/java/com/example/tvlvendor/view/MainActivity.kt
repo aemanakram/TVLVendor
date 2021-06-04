@@ -12,10 +12,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val viewPartsButton = findViewById<View>(R.id.ViewPartsButton)
+        val viewAppointmentsButton = findViewById<View>(R.id.ViewAppointmentsButton)
         val updateLocationButton = findViewById<View>(R.id.UpdateLocationButton)
 
         viewPartsButton.setOnClickListener {
             val value  = Intent(this, ViewPartsActivity::class.java)
+            startActivity(value)
+        }
+        viewAppointmentsButton.setOnClickListener {
+            val value  = Intent(this, ViewAppointmentsActivity::class.java)
             startActivity(value)
         }
         updateLocationButton.setOnClickListener {

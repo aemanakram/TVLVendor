@@ -1,15 +1,23 @@
 package com.example.tvlvendor.view
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.example.tvlvendor.R
+import com.example.tvlvendor.viewmodel.UpdateMapsViewModel
+import com.example.tvlvendor.viewmodel.ViewPartsViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -19,53 +27,102 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.sucho.placepicker.AddressData
+import com.sucho.placepicker.Constants
+import com.sucho.placepicker.PlacePicker
 
-class UpdateMapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class UpdateMapsActivity : AppCompatActivity() {
 
-    private lateinit var mMap: GoogleMap
     private var locationPermissionGranted = false
-    private var lastKnownLocation: Location? = null
+    private var lastKnownLocation: LatLng? = null
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private var location: Location? = null
+
+    private var updateMapsViewModel: UpdateMapsViewModel = UpdateMapsViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_maps)
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
 
-        // Construct a FusedLocationProviderClient.
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationProviderClient = FusedLocationProviderClient(this)
 
+        val addressField = findViewById<EditText>(R.id.AddressField)
+        val addressButton = findViewById<Button>(R.id.UpdateAddressButton)
+        val updateButton = findViewById<Button>(R.id.UpdateButton)
+
+        addressField.isEnabled = false
+        addressButton.isEnabled = false
+        updateButton.isEnabled = false
+
+        updateMapsViewModel.data.observe(this, Observer {
+            addressField.setText(it.address)
+            lastKnownLocation = it.location
+
+            addressButton.isEnabled = true
+            updateButton.isEnabled = true
+        })
+
+        updateButton.setOnClickListener{
+            getLocationPermission()
+            if(locationPermissionGranted){
+                updateLocation()
+            }
+        }
+
+        addressButton.setOnClickListener{
+            addressField.isEnabled = !addressField.isEnabled
+            if(addressField.isEnabled){
+                addressButton.text = "Update Address"
+            }
+            else{
+                addressButton.text = "Edit Address"
+                updateMapsViewModel.updateAddress(addressField.text.toString())
+            }
+        }
+
+        updateMapsViewModel.loadData()
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        mMap.uiSettings.isZoomControlsEnabled = true
-        mMap.uiSettings.isZoomGesturesEnabled = true
+    @SuppressLint("MissingPermission")
+    private fun updateLocation() {
+        val MAP_BUTTON_REQUEST_CODE = 1
+        val key = resources.getString(R.string.google_maps_key)
+        val intentBuilder = PlacePicker.IntentBuilder()
+                .setLatLong(40.748672, -73.985628)  // Initial Latitude and Longitude the Map will load into
+                .showLatLong(true)  // Show Coordinates in the Activity
+                .setMapZoom(12.0f)  // Map Zoom Level. Default: 14.0
+                .setAddressRequired(false) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
+//                        .hideMarkerShadow(true) // Hides the shadow under the map marker. Default: False
+//                        .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
+//                        .setMarkerImageImageColor(R.color.colorPrimary)
+//                        .setFabColor(R.color.fabColor)
+//                        .setPrimaryTextColor(R.color.primaryTextColor) // Change text color of Shortened Address
+//                        .setSecondaryTextColor(R.color.secondaryTextColor) // Change text color of full Address
+//                        .setBottomViewColor(R.color.bottomViewColor) // Change Address View Background Color (Default: White)
+//                        .setMapRawResourceStyle(R.raw.map_style)  //Set Map Style (https://mapstyle.withgoogle.com/)
+//                        .setMapType(MapType.NORMAL)
+                .setPlaceSearchBar(true, key) //Activate GooglePlace Search Bar. Default is false/not activated. SearchBar is a chargeable feature by Google
+//                        .onlyCoordinates(true)  //Get only Coordinates from Place Picke   r
+                .hideLocationButton(true)   //Hide Location Button (Default: false)
+//                        .disableMarkerAnimation(true)   //Disable Marker Animation (Default: false
+        if(lastKnownLocation != null){
+            intentBuilder.setLatLong(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
+            val intent = intentBuilder.build(this)
+            startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST)
+        }
 
-        getLocationPermission()
-
-        // Turn on the My Location layer and the related control on the map.
-        updateLocationUI()
-
-        // Get the current location of the device and set the position of the map.
-        getDeviceLocation()
-
-        mMap.setOnMapClickListener {
-            mMap.clear()
-            mMap.addMarker(MarkerOptions().position(it).title("Location"))
+        else if(locationPermissionGranted){
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+                lastKnownLocation = LatLng(it.latitude, it.longitude)
+                intentBuilder.setLatLong(it.latitude, it.longitude)
+                val intent = intentBuilder.build(this)
+                startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST)
+            }.addOnFailureListener{
+                val intent = intentBuilder.build(this)
+                startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST)
+            }
+        }else{
+            val intent = intentBuilder.build(this)
+            startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST)
         }
 
     }
@@ -105,57 +162,21 @@ class UpdateMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         }
-        updateLocationUI()
+        updateLocation()
     }
 
-    private fun updateLocationUI() {
-        try {
-            if (locationPermissionGranted) {
-                Log.d("MAP", "updateLocationUI")
-                mMap.isMyLocationEnabled = true
-                mMap.uiSettings?.isMyLocationButtonEnabled = true
-            } else {
-                mMap.isMyLocationEnabled = false
-                mMap.uiSettings?.isMyLocationButtonEnabled = false
-                lastKnownLocation = null
-                getLocationPermission()
-            }
-        } catch (e: SecurityException) {
-            Log.e("Exception: %s", e.message, e)
-        }
-    }
-
-    private fun getDeviceLocation() {
-        Log.d("MAP", "Permission: $locationPermissionGranted")
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
-        try {
-            if (locationPermissionGranted) {
-                val locationResult = fusedLocationProviderClient.lastLocation
-                locationResult.addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Set the map's camera position to the current location of the device.
-                        Log.d("MAP", task.result.toString())
-                        lastKnownLocation = task.result
-                        if (lastKnownLocation != null) {
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    LatLng(lastKnownLocation!!.latitude,
-                                            lastKnownLocation!!.longitude), 15f))
-                        }
-                    } else {
-                        Log.d("MAP", "Current location is null. Using defaults.")
-                        Log.e("MAP", "Exception: %s", task.exception)
-                        mMap.moveCamera(CameraUpdateFactory
-                                .newLatLng(LatLng(0.0, 0.0)))
-                        mMap.uiSettings?.isMyLocationButtonEnabled = false
-                    }
+    override fun onActivityResult(requestCode: Int,resultCode: Int,data: Intent?) {
+        if (requestCode == Constants.PLACE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                val addressData = data?.getParcelableExtra<AddressData>(Constants.ADDRESS_INTENT)
+                Log.d("MAP", addressData.toString())
+                if (addressData != null) {
+                    updateMapsViewModel.updateLocation(LatLng(addressData.latitude, addressData.longitude))
                 }
             }
-        } catch (e: SecurityException) {
-            Log.e("Exception: %s", e.message, e)
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
-    }
 
+    }
 }
