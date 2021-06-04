@@ -8,12 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tvlvendor.R
 import com.example.tvlvendor.adapter.AppointmentsAdapter
-import com.example.tvlvendor.adapter.PartsAdapter
-import com.example.tvlvendor.viewmodel.ViewAppointmentsViewModel
-import com.example.tvlvendor.viewmodel.ViewPartsViewModel
+import com.example.tvlvendor.viewmodel.AppointmentsViewModel
 
 class ViewAppointmentsActivity : AppCompatActivity() {
-    private var appointmentsViewModel: ViewAppointmentsViewModel = ViewAppointmentsViewModel()
+    private var appointmentsViewModel: AppointmentsViewModel = AppointmentsViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +35,6 @@ class ViewAppointmentsActivity : AppCompatActivity() {
 
 
 
-        appointmentsViewModel.loadAppointments()
+        appointmentsViewModel.loadAppointments(true)
     }
 }

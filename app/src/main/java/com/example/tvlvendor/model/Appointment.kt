@@ -3,10 +3,11 @@ package com.example.tvlvendor.model
 import com.google.firebase.Timestamp
 
 data class Appointment(
-        val id: String?,
-        var vendor_id: String?,
-        var owner_id: String?,
-        var owner_name: String?,
-        var time: Timestamp?,
-        var phone: String?
+        val id: String? = null,
+        var vendor_id: String? = null,
+        var owner_id: String? = null,
+        var owner_name: String? = null,
+        var time: Timestamp? = null,
+        var phone: String? = null,
+        var vehicle: UserVehicle? = null
 )

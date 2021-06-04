@@ -1,18 +1,25 @@
 package com.example.tvlvendor.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tvlvendor.R
+import com.example.tvlvendor.listeners.ApproveAppointmentClickListener
+import com.example.tvlvendor.listeners.PartClickListener
 import com.example.tvlvendor.model.Appointment
+import com.example.tvlvendor.model.Part
 import com.google.firebase.Timestamp
+import org.w3c.dom.Text
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 
-class AppointmentsAdapter (var dataSet: List<Appointment>) :
-    RecyclerView.Adapter<AppointmentsAdapter.ViewHolder>() {
+class ApproveAppointmentsAdapter (var dataSet: MutableList<Appointment>, private val itemClickListener: ApproveAppointmentClickListener) :
+    RecyclerView.Adapter<ApproveAppointmentsAdapter.ViewHolder>() {
 
 
     /**
@@ -26,13 +33,26 @@ class AppointmentsAdapter (var dataSet: List<Appointment>) :
         val time: TextView = view.findViewById(R.id.label_time)
         val license: TextView = view.findViewById(R.id.label_license)
 
+        val approveButton: Button = view.findViewById(R.id.button_approve)
+        val rejectButton: Button = view.findViewById(R.id.button_reject)
+        var _view: View = view
+
+        fun bind(appointment: Appointment, position: Int, clickListener: ApproveAppointmentClickListener)
+        {
+            approveButton.setOnClickListener {
+                clickListener.onItemClick(_view, appointment, position, true)
+            }
+            rejectButton.setOnClickListener {
+                clickListener.onItemClick(_view, appointment, position, false)
+            }
+        }
     }
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.appointment_item, viewGroup, false)
+            .inflate(R.layout.approve_appointment_item, viewGroup, false)
 
         return ViewHolder(view)
     }
@@ -40,10 +60,13 @@ class AppointmentsAdapter (var dataSet: List<Appointment>) :
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val appointment = dataSet[position]
+
         viewHolder.name.text = appointment.owner_name
         viewHolder.phone.text = appointment.phone
         viewHolder.time.text = formatDate(appointment.time)
         viewHolder.license.text = appointment.vehicle?.license ?: ""
+
+        viewHolder.bind(dataSet[position], position, itemClickListener)
 
     }
 
@@ -55,6 +78,11 @@ class AppointmentsAdapter (var dataSet: List<Appointment>) :
 
         if(time == null) return ""
         return SimpleDateFormat("HH:mm dd-MMMM-yyyy").format(time.toDate())
+    }
+
+    fun removeItem(position: Int) {
+        dataSet.removeAt(position)
+        notifyDataSetChanged()
     }
 
 }

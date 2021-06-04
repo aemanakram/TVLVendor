@@ -38,6 +38,7 @@
             android:name=".view.UpdateMapsActivity"
             android:label="@string/title_activity_update_maps" />
         <activity android:name=".view.ViewPartsActivity" />
+        <activity android:name=".view.ApproveAppointmentsActivity" />
         <activity android:name=".view.MainActivity" />
         <activity
             android:name=".view.SignupActivity"

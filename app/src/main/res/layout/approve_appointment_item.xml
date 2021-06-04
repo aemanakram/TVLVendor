@@ -50,7 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp">
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/label_time"
@@ -72,6 +73,33 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <Button
+                    android:id="@+id/button_approve"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:drawableLeft="@drawable/ic_baseline_done_24"
+                    android:drawableTint="@color/white"
+                    android:text="Approve" />
+                <Button
+                    android:id="@+id/button_reject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:drawableLeft="@drawable/ic_baseline_close_24"
+                    android:drawableTint="@color/white"
+                    android:backgroundTint="#F65350"
+                    android:text="Reject" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

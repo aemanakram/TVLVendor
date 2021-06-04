@@ -21,6 +21,13 @@
         android:layout_marginTop="32dp"
         android:text="View Appointments"/>
     <Button
+        android:id="@+id/ApproveAppointmentsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="32dp"
+        android:text="Schedule Appointments"/>
+    <Button
         android:id="@+id/UpdateLocationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
