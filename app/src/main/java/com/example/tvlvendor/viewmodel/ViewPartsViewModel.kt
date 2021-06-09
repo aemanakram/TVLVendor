@@ -28,6 +28,7 @@ class ViewPartsViewModel : ViewModel() {
                 val partsIds = res["inventory"] as ArrayList<String?>
                 Log.d("PART", partsIds[0].toString())
                 for (part in partsIds){
+
                     if (part != null) {
                         db.collection("Part").document(part).get().addOnSuccessListener {
                             parts.add(Part(part, it["name"] as String?, it["description"] as String?, it["life"] as String?, it["type"] as String?,0,0))
