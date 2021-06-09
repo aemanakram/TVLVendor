@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity() {
         val viewAppointmentsButton = findViewById<View>(R.id.ViewAppointmentsButton)
         val approveAppointmentsButton = findViewById<View>(R.id.ApproveAppointmentsButton)
         val updateLocationButton = findViewById<View>(R.id.UpdateLocationButton)
+        val addPartButton =findViewById<View>(R.id.AddPartsButton)
+        val updatePartButton=findViewById<View>(R.id.UpdatePartsButton)
 
         viewPartsButton.setOnClickListener {
             val value  = Intent(this, ViewPartsActivity::class.java)
@@ -32,5 +34,13 @@ class MainActivity : AppCompatActivity() {
             val value  = Intent(this, UpdateMapsActivity::class.java)
             startActivity(value)
         }
+        addPartButton.setOnClickListener {
+            startActivity(Intent(this,AddPartActivity::class.java))
+        }
+        updatePartButton.setOnClickListener {
+            startActivity(Intent(this,UpdatePartActivity::class.java))
+        }
+
+
     }
 }

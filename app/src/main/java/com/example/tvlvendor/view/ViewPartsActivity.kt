@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tvlvendor.R
 import com.example.tvlvendor.adapter.PartsAdapter
 import com.example.tvlvendor.listeners.PartClickListener
+import com.example.tvlvendor.model.Part
 import com.example.tvlvendor.viewmodel.ViewPartsViewModel
 
 class ViewPartsActivity : AppCompatActivity(), PartClickListener {
@@ -38,4 +39,6 @@ class ViewPartsActivity : AppCompatActivity(), PartClickListener {
 
         partsViewModel.loadParts()
     }
+
+
 }

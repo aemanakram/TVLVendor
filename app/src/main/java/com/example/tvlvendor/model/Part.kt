@@ -5,5 +5,7 @@ data class Part (
     var name: String?,
     var description: String?,
     var life: String?,
-    var type: String?
+    var type: String?,
+    var count:Int?,
+    var price:Int?
 )

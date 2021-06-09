@@ -30,7 +30,7 @@ class ViewPartsViewModel : ViewModel() {
                 for (part in partsIds){
                     if (part != null) {
                         db.collection("Part").document(part).get().addOnSuccessListener {
-                            parts.add(Part(part, it["name"] as String?, it["description"] as String?, it["life"] as String?, it["type"] as String?))
+                            parts.add(Part(part, it["name"] as String?, it["description"] as String?, it["life"] as String?, it["type"] as String?,0,0))
                             data.value = parts
                             Log.d("PART", it["name"].toString())
                         }
