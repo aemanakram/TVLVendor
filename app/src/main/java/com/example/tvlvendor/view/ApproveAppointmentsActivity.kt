@@ -45,8 +45,8 @@ class ApproveAppointmentsActivity : AppCompatActivity(), ApproveAppointmentClick
         appointmentsViewModel.loadAppointments(false)
     }
 
-    override fun onItemClick(view: View, appointment: Appointment, position: Int, approved: Boolean) {
-        if(approved){
+    override fun onItemClick(view: View, appointment: Appointment, position: Int, isApproved: Boolean) {
+        if(isApproved){
             appointmentsViewModel.approve(appointment)
         }
         else{
