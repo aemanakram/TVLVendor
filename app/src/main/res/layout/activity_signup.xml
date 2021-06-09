@@ -49,7 +49,7 @@
             android:layout_margin="10dp"
             android:ems="10"
             android:hint="Email"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"/>
 
         <EditText
             android:id="@+id/pass"
