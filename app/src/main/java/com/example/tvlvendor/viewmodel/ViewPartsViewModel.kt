@@ -6,7 +6,6 @@ import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.tvlvendor.model.Part
-import com.example.tvlvendor.model.UserVehicle
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -23,25 +22,19 @@ class ViewPartsViewModel : ViewModel() {
             if(res["inventory"] != null) {
 
                 val parts = mutableListOf<Part>()
-                val partsIds = mutableListOf<String>()
+                Log.d("PART", "HERE")
 
                 @Suppress("UNCHECKED_CAST")
-                val partsInfo = res["inventory"] as ArrayList<HashMap<String, Any>>?
-                if(partsInfo != null) {
-                    for (part in partsInfo) {
-                        partsIds.add(part["id"].toString())
-                        parts.add(Part(part["id"] as String?, quantity = part["quantity"] as Number?, price = part["price"] as Number?))
-                    }
-                    val idRef = com.google.firebase.firestore.FieldPath.documentId()
-                    db.collection("Part").whereIn(idRef, partsIds).get().addOnSuccessListener { partSnapshot ->
-                        for (doc in partSnapshot){
-                            val index = partsIds.indexOf(doc.id)
-                            if(index != -1)
-                                parts[index] = Part(doc.id, doc["name"] as String?, doc["description"] as String?, doc["life"] as String?, doc["type"] as String?, parts[index].price, parts[index].quantity)
+                val partsIds = res["inventory"] as ArrayList<String?>
+                Log.d("PART", partsIds[0].toString())
+                for (part in partsIds){
+
+                    if (part != null) {
+                        db.collection("Part").document(part).get().addOnSuccessListener {
+                            parts.add(Part(part, it["name"] as String?, it["description"] as String?, it["life"] as String?, it["type"] as String?,0,0))
+                            data.value = parts
+                            Log.d("PART", it["name"].toString())
                         }
-                        data.value = parts
-                    }.addOnFailureListener {
-                        data.value = parts
                     }
                 }
             }
@@ -50,4 +43,5 @@ class ViewPartsViewModel : ViewModel() {
             data.value = null
         }
     }
+
 }
