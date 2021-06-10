@@ -26,6 +26,8 @@ class AddPartAdapter (var dataSet: List<Part>,
         val type: TextView = view.findViewById(R.id.label_type)
         val life: TextView = view.findViewById(R.id.label_life)
         val description: TextView = view.findViewById(R.id.label_description)
+        val price: TextView = view.findViewById(R.id.label_price)
+        val quantity: TextView = view.findViewById(R.id.label_quantity)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -63,6 +65,8 @@ class AddPartAdapter (var dataSet: List<Part>,
         holder.description.text = part.description
         holder.bind(part, position, itemClickListener)
 
+        holder.price.text = ""
+        holder.quantity.text = ""
     }
 
     }

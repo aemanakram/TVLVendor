@@ -40,7 +40,7 @@ class AddPartViewModel: ViewModel() {
     fun addPart(part: Part, price:Int, quantity:Int){
         val uid: String = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val addData = hashMapOf(
-            "uid" to uid,
+            "id" to part.id,
             "price" to price,
             "quantity" to quantity
         )
