@@ -3,7 +3,6 @@ package com.example.tvlvendor.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.tvlvendor.model.Part
 import com.example.tvlvendor.model.Vendor
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,13 +32,23 @@ class UpdateMapsViewModel : ViewModel() {
         }
     }
 
-    fun updateLocation(latLng: LatLng){
+    fun updateLocation(latLng: LatLng, address: String?) {
+        if (address != null)
+            updateAddress(address)
         val updateData = hashMapOf("location" to GeoPoint(latLng.latitude, latLng.longitude))
         db.collection("Vendor").document(auth.currentUser?.uid!!).set(updateData, SetOptions.merge())
+        val tempData = data.value
+        if (tempData != null) {
+            if (address != null)
+                tempData.address = address
+            tempData.location = latLng
+        }
+        data.value = tempData
     }
 
     fun updateAddress(address: String){
 
+        data.value?.address = address
         val updateData = hashMapOf("address" to address)
         db.collection("Vendor").document(auth.currentUser?.uid!!).set(updateData, SetOptions.merge())
     }

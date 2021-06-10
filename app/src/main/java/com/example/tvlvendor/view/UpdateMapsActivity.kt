@@ -3,30 +3,22 @@ package com.example.tvlvendor.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.tvlvendor.R
 import com.example.tvlvendor.viewmodel.UpdateMapsViewModel
-import com.example.tvlvendor.viewmodel.ViewPartsViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.sucho.placepicker.AddressData
 import com.sucho.placepicker.Constants
 import com.sucho.placepicker.PlacePicker
@@ -170,9 +162,28 @@ class UpdateMapsActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val addressData = data?.getParcelableExtra<AddressData>(Constants.ADDRESS_INTENT)
                 Log.d("MAP", addressData.toString())
-                if (addressData != null) {
-                    updateMapsViewModel.updateLocation(LatLng(addressData.latitude, addressData.longitude))
+                val builder: AlertDialog.Builder = this.let {
+                    AlertDialog.Builder(it)
                 }
+
+                builder.setMessage("Update Address Automatically?")
+                        .setTitle("Update Address")
+                builder.apply {
+                    setPositiveButton("Yes") { _, _ ->
+                        if (addressData != null) {
+                            val address = addressData.addressList?.get(0)?.getAddressLine(0)
+                            updateMapsViewModel.updateLocation(LatLng(addressData.latitude,
+                                    addressData.longitude), address)
+                        }
+                    }
+                    setNegativeButton("No") { _, _ ->
+                        if (addressData != null) {
+                            updateMapsViewModel.updateLocation(LatLng(addressData.latitude, addressData.longitude), null)
+                        }
+                    }
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
