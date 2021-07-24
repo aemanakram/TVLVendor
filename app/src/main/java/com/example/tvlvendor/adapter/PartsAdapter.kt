@@ -71,6 +71,8 @@ class PartsAdapter (var dataSet: List<Part>,
         val type: TextView = view.findViewById(R.id.label_type)
         val life: TextView = view.findViewById(R.id.label_life)
         val description: TextView = view.findViewById(R.id.label_description)
+        val price: TextView = view.findViewById(R.id.label_price)
+        val quantity: TextView = view.findViewById(R.id.label_quantity)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -100,6 +102,10 @@ class PartsAdapter (var dataSet: List<Part>,
         viewHolder.type.text = part.type
         viewHolder.life.text = part.life
         viewHolder.description.text = part.description
+        val priceText = "Rs. ${part.price}"
+        val quantityText = "x ${part.quantity}"
+        viewHolder.price.text = priceText
+        viewHolder.quantity.text = quantityText
     }
 
     // Return the size of your dataset (invoked by the layout manager)
