@@ -21,7 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TVLVendor">
-        <activity android:name=".view.UpdatePartActivity"></activity>
+        <activity android:name=".view.ProfileActivity"></activity>
+        <activity android:name=".view.UpdatePartActivity" />
         <activity android:name=".view.AddPartActivity" />
         <activity android:name=".view.ViewAppointmentsActivity" />
         <!--

@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
         else{
             if(!email.text.contains("@"))
                 email.error = "Incorrect email format"
-            if(pass.text.length < 8)
+            if(pass.text.length < 6)
                 pass.error = "Password can not be less than 8 characters"
         }
     }
