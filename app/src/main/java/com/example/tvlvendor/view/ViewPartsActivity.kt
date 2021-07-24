@@ -13,8 +13,32 @@ import com.example.tvlvendor.model.Part
 import com.example.tvlvendor.viewmodel.ViewPartsViewModel
 
 class ViewPartsActivity : AppCompatActivity(), PartClickListener {
-
     private var partsViewModel: ViewPartsViewModel = ViewPartsViewModel()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_view_parts)
+
+        val partsRecyclerView = findViewById<RecyclerView>(R.id.recyclerview_View_parts)
+        partsRecyclerView.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+        val partsAdapter = PartsAdapter(emptyList(), this)
+
+        partsRecyclerView.adapter = partsAdapter
+
+        partsViewModel.data.observe(this, Observer {
+            Log.d("PART", "UPDATING")
+            partsAdapter.dataSet = it
+            partsAdapter.notifyDataSetChanged()
+        })
+
+
+        partsViewModel.loadParts()
+    }
+    /*private var partsViewModel: ViewPartsViewModel = ViewPartsViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +62,7 @@ class ViewPartsActivity : AppCompatActivity(), PartClickListener {
 
 
         partsViewModel.loadParts()
-    }
+    }*/
 
 
 }

@@ -1,8 +1,6 @@
 package com.example.tvlvendor.view
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.text.InputType
 import android.util.Log
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -17,7 +15,6 @@ import com.example.tvlvendor.adapter.AddPartAdapter
 import com.example.tvlvendor.listeners.AddPartClickListener
 import com.example.tvlvendor.model.Part
 import com.example.tvlvendor.viewmodel.AddPartViewModel
-import com.example.tvlvendor.viewmodel.ViewPartsViewModel
 
 
 class AddPartActivity : AppCompatActivity(), AddPartClickListener {
@@ -100,77 +97,3 @@ class AddPartActivity : AppCompatActivity(), AddPartClickListener {
 
 
 }
-
-/*class AddPartActivity : AppCompatActivity(), addPart.OnClickListener {
-    private lateinit var viewViewModel: ViewPartsViewModel
-    private lateinit var m_Text: String
-    private lateinit var l_number: String
-    var flag = false
-    private lateinit var part: Part
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_part)
-
-        var recyclerView = findViewById<RecyclerView>(R.id.recyclerview_parts)
-        val recyclerViewAdapter = addPart()
-        viewViewModel = ViewPartsViewModel()
-        viewViewModel.data.observe(this, Observer {
-
-            recyclerViewAdapter.setData(viewViewModel.data, this.applicationContext, this)
-            recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = recyclerViewAdapter
-        })
-
-
-    }
-
-    override fun onVehicleClick(part: Part) {
-
-        val builder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(this)
-        builder.setTitle("Enter Kilometers Driven")
-
-        val input = EditText(this)
-
-        input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_NUMBER_VARIATION_NORMAL
-        builder.setView(input)
-
-        builder.setPositiveButton("OK",
-            DialogInterface.OnClickListener { dialog, which -> m_Text = input.text.toString() ; lisence_number(part)})
-        builder.setNegativeButton("Cancel",
-            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
-
-        builder.show()
-
-
-    }
-
-
-    fun Back(view: View) {
-        finish()
-    }
-
-    fun lisence_number(vehicle: Part){
-        val builder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(this)
-        builder.setTitle("Enter Lisence Number")
-
-        val input = EditText(this)
-
-        input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_NUMBER_VARIATION_NORMAL
-        builder.setView(input)
-
-        builder.setPositiveButton("OK",
-            DialogInterface.OnClickListener { dialog, which -> l_number = input.text.toString() ; add(vehicle)})
-        builder.setNegativeButton("Cancel",
-            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
-
-        builder.show()
-    }
-
-    fun add(vehicle: Part){
-
-    }
-
-
-}*/
-

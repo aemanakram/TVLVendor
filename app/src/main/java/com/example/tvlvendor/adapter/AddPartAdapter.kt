@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tvlvendor.R
 import com.example.tvlvendor.listeners.AddPartClickListener
 import com.example.tvlvendor.model.Part
+import com.example.tvlvendor.view.AddPartActivity
+import com.example.tvlvendor.view.UpdatePartActivity
 
 
-class AddPartAdapter (var dataSet: List<Part>,
-                    private val itemClickListener: AddPartClickListener
+class AddPartAdapter(
+    var dataSet: List<Part>,
+    private val itemClickListener: AddPartClickListener
 ) :
     RecyclerView.Adapter<AddPartAdapter.ViewHolder>() {
 
@@ -26,6 +29,8 @@ class AddPartAdapter (var dataSet: List<Part>,
         val type: TextView = view.findViewById(R.id.label_type)
         val life: TextView = view.findViewById(R.id.label_life)
         val description: TextView = view.findViewById(R.id.label_description)
+       // val price:TextView=view.findViewById(R.id.label_price)
+       // val quantity:TextView=view.findViewById(R.id.label_quantity)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -61,6 +66,8 @@ class AddPartAdapter (var dataSet: List<Part>,
         holder.type.text = part.type
         holder.life.text = part.life
         holder.description.text = part.description
+        //holder.price.text=part.price.toString()
+       // holder.quantity.text=part.count.toString()
         holder.bind(part, position, itemClickListener)
 
     }

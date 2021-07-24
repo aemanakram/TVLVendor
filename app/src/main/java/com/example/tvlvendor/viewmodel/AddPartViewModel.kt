@@ -28,6 +28,8 @@ class AddPartViewModel: ViewModel() {
                 var type:String?= a["type"] as String
                 var description:String?= a["description"].toString()
                 var life:String?= a["life"].toString()
+//                var price:Int?=a["price"].toString().toInt()
+  //              var count:Int?=a["quantity"].toString().toInt()
                 parts.add(Part(id, name, description, life, type,0,0))
                 data.value=parts
             }
@@ -39,8 +41,9 @@ class AddPartViewModel: ViewModel() {
     }
     fun addPart(part: Part, price:Int, quantity:Int){
         val uid: String = FirebaseAuth.getInstance().currentUser!!.uid.toString()
+        val id:String=part.id.toString()
         val addData = hashMapOf(
-            "uid" to uid,
+            "id" to id,
             "price" to price,
             "quantity" to quantity
         )

@@ -6,6 +6,8 @@ data class Part (
     var description: String?,
     var life: String?,
     var type: String?,
-    var count:Int?,
-    var price:Int?
+    var quantity:Number?,
+    var price:Number?
+
+
 )
