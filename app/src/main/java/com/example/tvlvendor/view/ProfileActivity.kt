@@ -32,22 +32,18 @@ class ProfileActivity : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result!!) {
-                        if(document.id == uid)
-                        findViewById<EditText>(R.id.name).setText(document.data["name"].toString())
-                        findViewById<EditText>(R.id.email).setText(document.data["email"].toString())
-                        findViewById<EditText>(R.id.phoneNumber).setText(document.data["phone"].toString())
-                        findViewById<EditText>(R.id.cnic).setText(document.data["cnic"].toString())
+                        if(document.id.contains(uid)) {
+                            findViewById<EditText>(R.id.name).setText(document.data["name"].toString())
+                            findViewById<EditText>(R.id.email).setText(document.data["email"].toString())
+                            findViewById<EditText>(R.id.phoneNumber).setText(document.data["phone"].toString())
+                            findViewById<EditText>(R.id.cnic).setText(document.data["cnic"].toString())
 
+                        }
                     }
                 } else {
                     Log.w("TAG", "Error getting documents.", task.exception)
                 }
             }
-
-        /*findViewById<EditText>(R.id.name).setText(Admin.displayName)
-        findViewById<EditText>(R.id.email).setText(Admin.email())
-        findViewById<EditText>(R.id.phoneNumber).setText(Admin.phone)
-        findViewById<EditText>(R.id.cnic).setText(Admin.cnicNumber)*/
 
 
     }
